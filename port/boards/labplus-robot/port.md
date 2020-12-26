@@ -20,12 +20,11 @@
     * 对esp-adf/esp-idf打上补丁。
     * labplus-robot/modules下加入机器人相关的模块。 
     * 创建makefile-robot.mk文件，编译时，需执行：make -f Makefile-robot.mk release  make -f Makefile-robot.mk clean
-    * 添加robot/partitions.csv,robot的分区表重新分配，重新创建一个。
     * 参见编译环境搭建，另行创建一个虚拟环境，robot用的是idf v3.3版本，需与4.0版本区分。
+        注意：切换v3.3和v4.0版本的编译环境时，需重启一下wsl，以更新环境变量。
 
 2、项目修改
     * 修改Makefile-robot.mk：
-        # 修改partitions.csv路径。
         # 修改makefile-robot.mk下v3.3的commit hash值
         # BOARD ?= robot
         # FLASH_SIZE ?= 16MB
@@ -33,11 +32,8 @@
         # 去掉5x5 rgb点阵模块及驱动。
         # idf v3.3与v4.0网络协议的编译有些差异
           INC_ESPCOMP += -I$(ESPCOMP)/mbedtls/mbedtls/include/mbedtls
-    * main.c中添加heap_caps_add_region()操作。
     * 修改mpconfigboard.h:
-        修改板名：#define MICROPY_HW_BOARD_NAME "mpython-desktop-robot"
-    * 修改mpconfigboard.mk:
-        加入 SDKCONFIG += boards/sdkconfig.spiram
+        修改板名：#define MICROPY_HW_BOARD_NAME "labplus-robot"
     * robot/modules:
         # 增加robot.py, 控制从MCU。
         # 修改_boot.py中RGBled引脚, 灯数为8。
@@ -58,15 +54,19 @@
         配置需要的adf components,加入一需要的功能，如dueros、播放、录音、唤醒词。
         链接需要用到的adf库文件。
         配置好idf网络相关库。
-    * 创建adf-port文件夹，放置本项目adf移植相关文件
+        加入adf后，固件增大，需重新分配分区表
+    * 创建audio文件夹，放置本项目adf移植相关文件.
+    * mpconfigboard.h加入adf相关模块
+    * 修改mpconfigboard.mk,加入:
+        SDKCONFIG += boards/sdkconfig.spiram
+        SDKCONFIG += boards/labplus-robot/audio/sdkconfig.adf
+    * main.c中添加heap_caps_add_region()操作。
     * 修改Makefile-robot.mk:
-        # 修改并在Makefile-robot.mk适当位置加入以下adf makefile
+        添加labplus-robot/partitions.csv,分区表重新分配，修改makefile中partitions.csv路径。
+        include adf相关makefile:
             include $(BOARD_DIR)/adf-port/mpadfenv.mk  # 配置一些环境变量及相关头文件包含。
             include $(BOARD_DIR)/adf-port/mpadflibs.mk # 添加一些adf库
             include $(BOARD_DIR)/adf-port/mpadfobj.mk  # 添加需要编译的idf adf源文件
-    * mpconfigboard.mk加入adf配置及psram支持
-    * mpconfigboard.h加入adf相关模块
-
 ------------------------------------------------------------------
 注：
 micropython编译环境搭建

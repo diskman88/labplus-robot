@@ -29,7 +29,12 @@
 # 	$(wildcard $(ADFCOMP)/audio_hal/driver/*/*/*.c) 
 # 	)
 
-ESPADF_AUDIO_BOARD_O = $(patsubst %.c,%.o,$(wildcard $(BOARD_DIR)/esp-adf/board/*.c)) #使用修改后的硬件驱动。
+ESPADF_AUDIO_BOARD_O = $(patsubst %.c,%.o,$(wildcard $(AUDIO)/board/*.c)) #使用修改后的硬件驱动。
+
+ESPADF_AUDIO_DUEROS_O = $(patsubst %.c,%.o, \
+	$(wildcard $(AUDIO)/dueros/*.c) \
+	$(wildcard $(AUDIO)/dueros/dueros_service/*.c) \
+	)
 
 ESPADF_ADF_UTILS_O = $(patsubst %.c,%.o, \
 	$(wildcard $(ADFCOMP)/adf_utils/cloud_services/*.c) \
@@ -47,10 +52,10 @@ ESPADF_AUDIO_STREAM_O = $(patsubst %.c,%.o,\
 	$(ADFCOMP)/audio_stream/hls_playlist.c \
 	)
 
-# ESPADF_DISPLAY_SERVICE_O = $(patsubst %.c,%.o,
-# 	$(wildcard $(ADFCOMP)/display_service/*.c) 
-# 	$(wildcard $(ADFCOMP)/display_service/led_indicator/*.c) 
-# 	)
+ESPADF_DISPLAY_SERVICE_O = $(patsubst %.c,%.o, \
+	$(wildcard $(ADFCOMP)/display_service/*.c) \
+	$(wildcard $(ADFCOMP)/display_service/led_indicator/*.c) \
+	)
 
 ESPADF_ESP_DISPATCHER_O = $(patsubst %.c,%.o,$(wildcard $(ADFCOMP)/esp_dispatcher/*.c))
 
@@ -75,12 +80,13 @@ ESPADF_DUEROS_SERVICE_O = $(patsubst %.c,%.o, \
 	)
 
 $(eval $(call gen_espidf_lib_rule,audio_board,$(ESPADF_AUDIO_BOARD_O)))
+$(eval $(call gen_espidf_lib_rule,audio_dueros,$(ESPADF_AUDIO_DUEROS_O)))
 # $(eval $(call gen_espidf_lib_rule,audio_hal,$(ESPADF_AUDIO_HAL_O)))
 $(eval $(call gen_espidf_lib_rule,audio_pipeline,$(ESPADF_AUDIO_PIPELINE_O)))
 $(eval $(call gen_espidf_lib_rule,audio_sal,$(ESPADF_AUDIO_SAL_O)))
 $(eval $(call gen_espidf_lib_rule,adf_utils,$(ESPADF_ADF_UTILS_O)))
 $(eval $(call gen_espidf_lib_rule,audio_stream,$(ESPADF_AUDIO_STREAM_O)))
-# $(eval $(call gen_espidf_lib_rule,display_service,$(ESPADF_DISPLAY_SERVICE_O)))
+$(eval $(call gen_espidf_lib_rule,display_service,$(ESPADF_DISPLAY_SERVICE_O)))
 $(eval $(call gen_espidf_lib_rule,esp_dispatcher,$(ESPADF_ESP_DISPATCHER_O)))
 $(eval $(call gen_espidf_lib_rule,esp_peripherals,$(ESPADF_ESP_PERIPHERALS_O)))
 $(eval $(call gen_espidf_lib_rule,esp-adf-libs,$(ESPADF_LIBS_O)))

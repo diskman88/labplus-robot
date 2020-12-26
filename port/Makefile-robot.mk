@@ -385,7 +385,7 @@ DRIVERS_SRC_C = $(addprefix drivers/,\
 	dht/dht.c \
 	)
 
-# include $(BOARD_DIR)/adf-port/mpadfenv.mk
+include $(BOARD_DIR)/audio/mpadfenv.mk
 #########################################################################################################
 # mpython projects
 # 开机显示和异常打印功能模块
@@ -499,7 +499,8 @@ PY_O := $(filter-out $(BUILD)/extmod/modframebuf.o, $(PY_O))
 
 SRC_C += $(BOARD_C) $(BUILTIN_C) $(SRC_MOD)
 
-# include $(BOARD_DIR)/adf-port/mod/mpmod.mk
+# include $(BOARD_DIR)/audio/mod/mpmod.mk
+SRC_C += $(wildcard $(AUDIO)/mod/*.c)
 
 OBJ_MP =
 OBJ_MP += $(PY_O)
@@ -815,7 +816,7 @@ ESPIDF_ESP_TLS_O = $(patsubst %.c,%.o, $(wildcard $(ESPCOMP)/esp-tls/*.c))
 $(eval $(call gen_espidf_lib_rule,esp-tls,$(ESPIDF_ESP_TLS_O)))
 #############################################################################
 
-# include $(BOARD_DIR)/adf-port/mpadfobj.mk
+include $(BOARD_DIR)/audio/mpadfobj.mk
 
 # Create all destination build dirs before compiling IDF source
 OBJ_ESPIDF_DIRS = $(sort $(dir $(OBJ_ESPIDF))) $(BUILD_ESPIDF_LIB) $(addprefix $(BUILD_ESPIDF_LIB)/,$(LIB_ESPIDF))
@@ -949,7 +950,7 @@ APP_LD_ARGS += -L$(ESPCOMP)/esp32/lib -lcore -lmesh -lnet80211 -lphy -lrtc -lpp 
 endif
 APP_LD_ARGS += $(OBJ)
 APP_LD_ARGS += $(LIB)
-# include $(BOARD_DIR)/adf-port/mpadflibs.mk
+include $(BOARD_DIR)/audio/mpadflibs.mk
 APP_LD_ARGS += --end-group
 
 $(BUILD)/esp32_out.ld: $(SDKCONFIG_H)

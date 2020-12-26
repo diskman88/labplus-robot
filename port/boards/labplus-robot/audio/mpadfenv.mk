@@ -8,10 +8,10 @@
 # ADFCOMP = $(ADF_PATH)/components
 # ADFSDKCONFIG = $(ADF_PATH)/micropython_adf/sdkconfig.adf
 
-ESPADF = boards/robot/esp-adf
-ADF_PORT = boards/robot/adf-port
-ADFCOMP = boards/robot/esp-adf/components
-# ADFSDKCONFIG = boards/robot/sdkconfig.adf
+AUDIO = boards/labplus-robot/audio
+ESPADF = $(AUDIO)/esp-adf
+ADFCOMP = $(AUDIO)/esp-adf/components
+ADFSDKCONFIG = $(AUDIO)/sdkconfig.adf
 
 ESPCOMP_KCONFIGS += $(shell find $(ADFCOMP) -name Kconfig)
 ESPCOMP_KCONFIGS_PROJBUILD += $(shell find $(ADFCOMP) -name Kconfig.projbuild)
@@ -20,15 +20,12 @@ ADF_VER = := $(shell git -C $(ESPADF) describe)
 
 CFLAGS_COMMON += -Wno-sign-compare
 
-# include $(ADFSDKCONFIG)
+include $(ADFSDKCONFIG)
 
 # bluetooth_service clouds dueros_service esp_actions input_key_service playlist wifi_service
-INC_ESPCOMP += -I$(ADF_PORT)/board/include
-INC_ESPCOMP += -I$(ADF_PORT)/mod
-INC_ESPCOMP += -I$(ADF_PORT)/dueros
-INC_ESPCOMP += -I$(ADF_PORT)/dueros/dueros_service/include
+INC += -I$(AUDIO)/mod
 
-# SDKCONFIG += $(ADFSDKCONFIG)
+SDKCONFIG += $(ADFSDKCONFIG)
 
 # bluetooth_service clouds dueros_service esp_actions input_key_service playlist wifi_service
 # INC_ESPCOMP += -I$(ADFCOMP)/audio_board/include
@@ -58,20 +55,24 @@ INC_ESPCOMP += -I$(ADF_PORT)/dueros/dueros_service/include
 # INC_ESPCOMP += -I$(ADFCOMP)/audio_hal/driver/zl38063/api_lib
 # INC_ESPCOMP += -I$(ADFCOMP)/audio_hal/driver/zl38063/example_apps
 # INC_ESPCOMP += -I$(ADFCOMP)/audio_hal/driver/zl38063/firmware
+INC += -I$(AUDIO)/board/include
+INC_ESPCOMP += -I$(AUDIO)/dueros
+INC_ESPCOMP += -I$(AUDIO)/dueros/dueros_service/include
+
 INC_ESPCOMP += -I$(ADFCOMP)/audio_pipeline/include
 INC_ESPCOMP += -I$(ADFCOMP)/audio_sal/include
 INC_ESPCOMP += -I$(ADFCOMP)/audio_stream
 INC_ESPCOMP += -I$(ADFCOMP)/audio_stream/include
 INC_ESPCOMP += -I$(ADFCOMP)/display_service/include
-# INC_ESPCOMP += -I$(ADFCOMP)/display_service/led_indicator/include
-# INC_ESPCOMP += -I$(ADFCOMP)/display_service/led_bar/include
+INC_ESPCOMP += -I$(ADFCOMP)/display_service/led_indicator/include
+INC_ESPCOMP += -I$(ADFCOMP)/display_service/led_bar/include
 INC_ESPCOMP += -I$(ADFCOMP)/esp_dispatcher/include
 INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/include
 # INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/driver/i2c_bus
 # INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/adc_button
 # INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/blufi
-# INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/button
-# INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/gpio_isr
+INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/button
+INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/gpio_isr
 # INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/IS31FL3216
 # INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/sdcard
 # INC_ESPCOMP += -I$(ADFCOMP)/esp_peripherals/lib/touch
