@@ -409,7 +409,7 @@ CODEC_SRC_C = $(addprefix drivers/codec/,\
 	http_client.c \
 	audio_renderer.c \
 	audio_recorder.c \
-	wav_head_1.c \
+	wave_head.c \
 	codec_lib/helix/src/bitstream.c \
 	codec_lib/helix/src/buffers.c \
 	codec_lib/helix/src/dct32.c \
@@ -426,7 +426,7 @@ CODEC_SRC_C = $(addprefix drivers/codec/,\
 	codec_lib/helix/src/subband.c \
 	codec_lib/helix/src/trigtabs.c \
 	decoder/helix_mp3_decoder.c \
-	es8388/es8388_1.c \
+	es8388/es8388.c \
 	)
 
 # mpu6050驱动

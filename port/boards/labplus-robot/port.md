@@ -21,7 +21,7 @@
     * labplus-robot/modules下加入机器人相关的模块。 
     * 创建makefile-robot.mk文件，编译时，需执行：make -f Makefile-robot.mk release  make -f Makefile-robot.mk clean
     * 添加robot/partitions.csv,robot的分区表重新分配，重新创建一个。
-    * 参见编译环境搭建，另行创建一个虚拟环境，robot用的是idf v3.3版本。
+    * 参见编译环境搭建，另行创建一个虚拟环境，robot用的是idf v3.3版本，需与4.0版本区分。
 
 2、项目修改
     * 修改Makefile-robot.mk：
@@ -54,7 +54,7 @@
 
 3、移植esp-adf
     需解决的问题：
-        驱动相关，去了除一些不需要的驱动，micropython已对硬件I2C处理，es8388驱动需做些修改，需解决之前固件中已有es8388.c/h文件冲突
+        驱动相关，去了除一些不需要的驱动，micropython已对硬件I2C处理，wav_head.h/c改名为wave_head.h/c避免文件同名冲突
         配置需要的adf components,加入一需要的功能，如dueros、播放、录音、唤醒词。
         链接需要用到的adf库文件。
         配置好idf网络相关库。
