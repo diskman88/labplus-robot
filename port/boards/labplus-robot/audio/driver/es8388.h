@@ -306,7 +306,7 @@ esp_err_t es8388_ctrl_state(audio_hal_codec_mode_t mode, audio_hal_ctrl_t ctrl_s
  */
 void es8388_pa_power(bool enable);
 
-extern mp_obj_base_t *es_i2c_obj;
+extern mp_obj_base_t *es8388_i2c_obj;
 
 #ifdef __cplusplus
 }

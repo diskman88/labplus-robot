@@ -1,4 +1,4 @@
 
-ADFMPMOD = $(BOARD_DIR)/adf-port/mod
+ADFMPMOD = $(AUDIO)/mod
 
 SRC_C += $(wildcard $(ADFMPMOD)/*.c)

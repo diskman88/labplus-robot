@@ -166,8 +166,8 @@ STATIC mp_obj_t audio_player_make_new(const mp_obj_type_t *type, size_t n_args, 
     audio_player_obj_t *self = m_new_obj_with_finaliser(audio_player_obj_t);
     self->base.type = type;
     self->callback = args[0];
-    if(!es_i2c_obj){
-        es_i2c_obj = (mp_obj_base_t *)args[1];
+    if(!es8388_i2c_obj){
+        es8388_i2c_obj = (mp_obj_base_t *)args[1];
     }
     if (basic_player == NULL) {
         basic_player = audio_player_create();

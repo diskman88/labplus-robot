@@ -39,7 +39,7 @@
 #include "modcodec.h"
 #include "audio_recorder.h"
 #include "local_play.h"
-#include "es8388.h"
+#include "ES8388.h"
 
 // static const char *TAG = "audio";
 
@@ -54,7 +54,7 @@ STATIC mp_obj_t audio_player_init(size_t n_args, const mp_obj_t *args)
         if(!es_i2c_obj){
             es_i2c_obj = (mp_obj_base_t *)args[0];
             audio_hal_codec_config_t cfg = AUDIO_CODEC_DEFAULT_CONFIG();
-            es8388_init(cfg);
+            ES8388_init(cfg);
         }
     }
     else
@@ -110,7 +110,7 @@ STATIC mp_obj_t audio_volume(mp_obj_t Volume)
     #if MICROPY_BUILDIN_DAC 
     player_set_volume(vol);
     #else
-    es8388_set_voice_volume(vol);
+    ES8388_set_voice_volume(vol);
     #endif
     return mp_const_none;   
 }
@@ -138,7 +138,7 @@ STATIC mp_obj_t audio_recorder_init(size_t n_args, const mp_obj_t *args)
         if(!es_i2c_obj){
             es_i2c_obj = (mp_obj_base_t *)args[0];
             audio_hal_codec_config_t cfg = AUDIO_CODEC_DEFAULT_CONFIG();
-            es8388_init(cfg);
+            ES8388_init(cfg);
         }
     }
     else

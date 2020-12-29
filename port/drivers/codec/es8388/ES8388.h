@@ -367,7 +367,7 @@ typedef struct {
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_init(audio_hal_codec_config_t cfg);
+esp_err_t ES8388_init(audio_hal_codec_config_t cfg);
 
 /**
  * @brief Deinitialize ES8388 codec chip
@@ -376,7 +376,7 @@ esp_err_t es8388_init(audio_hal_codec_config_t cfg);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_deinit(void);
+esp_err_t ES8388_deinit(void);
 
 /**
  * @brief Configure ES8388 I2S format
@@ -388,7 +388,7 @@ esp_err_t es8388_deinit(void);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_config_fmt(es_module_t mod, es_i2s_fmt_t cfg);
+esp_err_t ES8388_config_fmt(es_module_t mod, es_i2s_fmt_t cfg);
 
 /**
  * @brief Configure I2s clock in MSATER mode
@@ -399,7 +399,7 @@ esp_err_t es8388_config_fmt(es_module_t mod, es_i2s_fmt_t cfg);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_i2s_config_clock(es_i2s_clock_t cfg);
+esp_err_t ES8388_i2s_config_clock(es_i2s_clock_t cfg);
 
 /**
  * @brief Configure ES8388 data sample bits
@@ -411,7 +411,7 @@ esp_err_t es8388_i2s_config_clock(es_i2s_clock_t cfg);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_set_bits_per_sample(es_module_t mode, es_bits_length_t bit_per_sample);
+esp_err_t ES8388_set_bits_per_sample(es_module_t mode, es_bits_length_t bit_per_sample);
 
 /**
  * @brief  Start ES8388 codec chip
@@ -422,7 +422,7 @@ esp_err_t es8388_set_bits_per_sample(es_module_t mode, es_bits_length_t bit_per_
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_start(es_module_t mode);
+esp_err_t ES8388_start(es_module_t mode);
 
 /**
  * @brief  Stop ES8388 codec chip
@@ -433,7 +433,7 @@ esp_err_t es8388_start(es_module_t mode);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_stop(es_module_t mode);
+esp_err_t ES8388_stop(es_module_t mode);
 
 /**
  * @brief  Set voice volume
@@ -444,7 +444,7 @@ esp_err_t es8388_stop(es_module_t mode);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_set_voice_volume(int volume);
+esp_err_t ES8388_set_voice_volume(int volume);
 
 /**
  * @brief Get voice volume
@@ -455,7 +455,7 @@ esp_err_t es8388_set_voice_volume(int volume);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t es8388_get_voice_volume(int *volume);
+esp_err_t ES8388_get_voice_volume(int *volume);
 
 /**
  * @brief Configure ES8388 DAC mute or not. Basically you can use this function to mute the output or unmute
@@ -466,7 +466,7 @@ esp_err_t es8388_get_voice_volume(int *volume);
  *     - ESP_FAIL Parameter error
  *     - ESP_OK   Success
  */
-esp_err_t es8388_set_voice_mute(bool enable);
+esp_err_t ES8388_set_voice_mute(bool enable);
 
 /**
  * @brief Get ES8388 DAC mute status
@@ -475,7 +475,7 @@ esp_err_t es8388_set_voice_mute(bool enable);
  *     - ESP_FAIL Parameter error
  *     - ESP_OK   Success
  */
-esp_err_t es8388_get_voice_mute(void);
+esp_err_t ES8388_get_voice_mute(void);
 
 /**
  * @brief Set ES8388 mic gain
@@ -486,7 +486,7 @@ esp_err_t es8388_get_voice_mute(void);
  *     - ESP_FAIL Parameter error
  *     - ESP_OK   Success
  */
-esp_err_t es8388_set_mic_gain(es_mic_gain_t gain);
+esp_err_t ES8388_set_mic_gain(es_mic_gain_t gain);
 
 /**
  * @brief Set ES8388 adc input mode
@@ -497,7 +497,7 @@ esp_err_t es8388_set_mic_gain(es_mic_gain_t gain);
  *     - ESP_FAIL Parameter error
  *     - ESP_OK   Success
  */
-esp_err_t es8388_config_adc_input(es_adc_input_t input);
+esp_err_t ES8388_config_adc_input(es_adc_input_t input);
 
 /**
  * @brief Set ES8388 dac power and output mode
@@ -508,7 +508,7 @@ esp_err_t es8388_config_adc_input(es_adc_input_t input);
  *     - ESP_FAIL Parameter error
  *     - ESP_OK   Success
  */
-esp_err_t es8388_config_dac_power_and_output(es_dac_output_t output);
+esp_err_t ES8388_config_dac_power_and_output(es_dac_output_t output);
 
 extern mp_obj_base_t *es_i2c_obj;
 

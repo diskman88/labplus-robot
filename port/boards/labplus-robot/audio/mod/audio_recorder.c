@@ -68,8 +68,8 @@ STATIC mp_obj_t audio_recorder_make_new(const mp_obj_type_t *type, size_t n_args
     mp_arg_check_num(n_args, n_kw, 1, 1, false);
     audio_recorder_obj_t *self = m_new_obj_with_finaliser(audio_recorder_obj_t);
     self->base.type = type;
-    if(!es_i2c_obj){
-        es_i2c_obj = (mp_obj_base_t *)args[1];
+    if(!es8388_i2c_obj){
+        es8388_i2c_obj = (mp_obj_base_t *)args[1];
     }
     return MP_OBJ_FROM_PTR(self);
 }

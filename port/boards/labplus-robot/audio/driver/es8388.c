@@ -34,7 +34,7 @@
 
 static const char *ES_TAG = "ES8388_DRIVER";
 #define ES8388_ADDR 16
-mp_obj_base_t *es_i2c_obj = NULL;
+mp_obj_base_t *es8388_i2c_obj = NULL;
 
 #define ES_ASSERT(a, format, b, ...) \
     if ((a) != 0) { \
@@ -54,7 +54,7 @@ audio_hal_func_t AUDIO_CODEC_ES8388_DEFAULT_HANDLE = {
 
 static esp_err_t es_write_reg(uint8_t slave_addr, uint8_t reg_add, uint8_t data)
 {
-    mp_machine_i2c_p_t *i2c_p = (mp_machine_i2c_p_t*)es_i2c_obj->type->protocol;
+    mp_machine_i2c_p_t *i2c_p = (mp_machine_i2c_p_t*)es8388_i2c_obj->type->protocol;
     uint8_t temp[2];
     temp[0] = (uint8_t)reg_add;
     temp[1] = data;
@@ -62,7 +62,7 @@ static esp_err_t es_write_reg(uint8_t slave_addr, uint8_t reg_add, uint8_t data)
     mp_machine_i2c_buf_t buf = {.len = 2, .buf = temp};
     bool stop = true;
     unsigned int flags = stop ? MP_MACHINE_I2C_FLAG_STOP : 0;
-    int ret = i2c_p->transfer((mp_obj_base_t *)es_i2c_obj, ES8388_ADDR, 1, &buf, flags);
+    int ret = i2c_p->transfer((mp_obj_base_t *)es8388_i2c_obj, ES8388_ADDR, 1, &buf, flags);
     if (ret < 0) {
         mp_raise_OSError(-ret);
     }
@@ -71,13 +71,13 @@ static esp_err_t es_write_reg(uint8_t slave_addr, uint8_t reg_add, uint8_t data)
 
 static esp_err_t es_read_reg(uint8_t reg_add, uint8_t *p_data)
 {
-    mp_machine_i2c_p_t *i2c_p = (mp_machine_i2c_p_t*)es_i2c_obj->type->protocol;
+    mp_machine_i2c_p_t *i2c_p = (mp_machine_i2c_p_t*)es8388_i2c_obj->type->protocol;
 
     uint8_t _reg_addr = reg_add;
     mp_machine_i2c_buf_t buf = {.len = 1, .buf = (uint8_t*)&_reg_addr};
     bool stop = false;
     unsigned int flags = stop ? MP_MACHINE_I2C_FLAG_STOP : 0;
-    int ret = i2c_p->transfer((mp_obj_base_t *)es_i2c_obj, ES8388_ADDR, 1, &buf, flags);
+    int ret = i2c_p->transfer((mp_obj_base_t *)es8388_i2c_obj, ES8388_ADDR, 1, &buf, flags);
     if (ret < 0) {
         mp_raise_OSError(-ret);
     }
@@ -86,7 +86,7 @@ static esp_err_t es_read_reg(uint8_t reg_add, uint8_t *p_data)
     buf.buf = p_data;
     stop = true;
     flags = MP_MACHINE_I2C_FLAG_READ | (stop ? MP_MACHINE_I2C_FLAG_STOP : 0);
-    ret = i2c_p->transfer((mp_obj_base_t *)es_i2c_obj, ES8388_ADDR, 1, &buf, flags);
+    ret = i2c_p->transfer((mp_obj_base_t *)es8388_i2c_obj, ES8388_ADDR, 1, &buf, flags);
     if (ret < 0) {
         mp_raise_OSError(-ret);
     }

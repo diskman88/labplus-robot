@@ -426,7 +426,7 @@ CODEC_SRC_C = $(addprefix drivers/codec/,\
 	codec_lib/helix/src/subband.c \
 	codec_lib/helix/src/trigtabs.c \
 	decoder/helix_mp3_decoder.c \
-	es8388/es8388.c \
+	es8388/ES8388.c \
 	)
 
 # mpu6050驱动
@@ -499,8 +499,7 @@ PY_O := $(filter-out $(BUILD)/extmod/modframebuf.o, $(PY_O))
 
 SRC_C += $(BOARD_C) $(BUILTIN_C) $(SRC_MOD)
 
-# include $(BOARD_DIR)/audio/mod/mpmod.mk
-SRC_C += $(wildcard $(AUDIO)/mod/*.c)
+include $(AUDIO)/mod/mpmod.mk
 
 OBJ_MP =
 OBJ_MP += $(PY_O)

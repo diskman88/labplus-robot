@@ -7,6 +7,9 @@
 #      硬件的相关引脚做些修改，ES8388的I2C驱动用在mpython已初始化，驱动需做些修改。
 #   2、按需要添加/删减一些adf模块。
 #   3、adf需要一些idf componets，但大部分已在mpython项目的makefile中添加，这里把重复的注释。
+#   4、对文件系统的操作都放在micropython层面。
+#   5、除了codec芯片，其它的硬件驱动不需要。
+#   6、添加dueros音箱功能。
 
 # ifdef CONFIG_ESP_LYRAT_V4_3_BOARD
 # ESPADF_AUDIO_BOARD_O = $(patsubst %.c,%.o,$(wildcard $(ADFCOMP)/audio_board/lyrat_v4_3/*.c))
@@ -23,18 +26,11 @@
 # ifdef CONFIG_ESP_LYRAT_MINI_V1_1_BOARD
 # ESPADF_AUDIO_BOARD_O = $(patsubst %.c,%.o,$(wildcard $(ADFCOMP)/audio_board/lyrat_mini_v1_1/*.c))
 # endif
-# ESPADF_AUDIO_HAL_O = $(patsubst %.c,%.o,
-# 	$(wildcard $(ADFCOMP)/audio_hal/*.c) 
-# 	$(wildcard $(ADFCOMP)/audio_hal/driver/*/*.c) 
-# 	$(wildcard $(ADFCOMP)/audio_hal/driver/*/*/*.c) 
-# 	)
-
-ESPADF_AUDIO_BOARD_O = $(patsubst %.c,%.o,$(wildcard $(AUDIO)/board/*.c)) #使用修改后的硬件驱动。
-
-ESPADF_AUDIO_DUEROS_O = $(patsubst %.c,%.o, \
-	$(wildcard $(AUDIO)/dueros/*.c) \
-	$(wildcard $(AUDIO)/dueros/dueros_service/*.c) \
+ESPADF_AUDIO_HAL_O = $(patsubst %.c,%.o, \
+	$(wildcard $(ADFCOMP)/audio_hal/*.c) \
 	)
+
+ESPADF_AUDIO_BOARD_O = $(patsubst %.c,%.o,$(wildcard $(AUDIO)/driver/*.c)) #使用修改后的硬件驱动。
 
 ESPADF_ADF_UTILS_O = $(patsubst %.c,%.o, \
 	$(wildcard $(ADFCOMP)/adf_utils/cloud_services/*.c) \
@@ -52,7 +48,7 @@ ESPADF_AUDIO_STREAM_O = $(patsubst %.c,%.o,\
 	$(ADFCOMP)/audio_stream/hls_playlist.c \
 	)
 
-ESPADF_DISPLAY_SERVICE_O = $(patsubst %.c,%.o, \
+ESPADF_DISPLAY_SERVICE_O = $(patsubst %.c,%.o,\
 	$(wildcard $(ADFCOMP)/display_service/*.c) \
 	$(wildcard $(ADFCOMP)/display_service/led_indicator/*.c) \
 	)
@@ -60,8 +56,12 @@ ESPADF_DISPLAY_SERVICE_O = $(patsubst %.c,%.o, \
 ESPADF_ESP_DISPATCHER_O = $(patsubst %.c,%.o,$(wildcard $(ADFCOMP)/esp_dispatcher/*.c))
 
 ESPADF_ESP_PERIPHERALS_O = $(patsubst %.c,%.o,\
-	$(wildcard $(ADFCOMP)/esp_peripherals/esp_peripherals.c) \
+	$(ADFCOMP)/esp_peripherals/esp_peripherals.c \
+	$(ADFCOMP)/esp_peripherals/periph_button.c \
+	$(ADFCOMP)/esp_peripherals/periph_led.c \
+	$(ADFCOMP)/esp_peripherals/lib/button/button.c \
 	)
+	# $(ADFCOMP)/esp_peripherals/periph_ws2812.c 
 
 ESPADF_LIBS_O = $(patsubst %.c,%.o, \
 	$(wildcard $(ADFCOMP)/esp-adf-libs/esp_codec/*.c) \
@@ -74,14 +74,17 @@ ESPIDF_PLAYLIST_O = $(patsubst %.c,%.o, \
 	$(wildcard $(ADFCOMP)/playlist/sdcard_scan/*.c) \
 	)
 
-ESPADF_DUEROS_SERVICE_O = $(patsubst %.c,%.o, \
-	$(wildcard $(BOARD_DIR)/dueros/dueros_service/*.c) \
-	$(wildcard $(BOARD_DIR)/dueros/*.c) \
+ESPADF_SERVICE_O = $(patsubst %.c,%.o, \
+	$(wildcard $(AUDIO)/lib/dueros/*.c) \
+	$(wildcard $(AUDIO)/lib/dueros/dueros_service/*.c) \
+	)
+
+ESPADF_STREAM_O = $(patsubst %.c,%.o, \
+	$(wildcard $(AUDIO)/lib/stream/*.c) \
 	)
 
 $(eval $(call gen_espidf_lib_rule,audio_board,$(ESPADF_AUDIO_BOARD_O)))
-$(eval $(call gen_espidf_lib_rule,audio_dueros,$(ESPADF_AUDIO_DUEROS_O)))
-# $(eval $(call gen_espidf_lib_rule,audio_hal,$(ESPADF_AUDIO_HAL_O)))
+$(eval $(call gen_espidf_lib_rule,audio_hal,$(ESPADF_AUDIO_HAL_O)))
 $(eval $(call gen_espidf_lib_rule,audio_pipeline,$(ESPADF_AUDIO_PIPELINE_O)))
 $(eval $(call gen_espidf_lib_rule,audio_sal,$(ESPADF_AUDIO_SAL_O)))
 $(eval $(call gen_espidf_lib_rule,adf_utils,$(ESPADF_ADF_UTILS_O)))
@@ -91,7 +94,8 @@ $(eval $(call gen_espidf_lib_rule,esp_dispatcher,$(ESPADF_ESP_DISPATCHER_O)))
 $(eval $(call gen_espidf_lib_rule,esp_peripherals,$(ESPADF_ESP_PERIPHERALS_O)))
 $(eval $(call gen_espidf_lib_rule,esp-adf-libs,$(ESPADF_LIBS_O)))
 $(eval $(call gen_espidf_lib_rule,esp-idf-playlist,$(ESPIDF_PLAYLIST_O)))
-$(eval $(call gen_espidf_lib_rule,dueros_service,$(ESPADF_DUEROS_SERVICE_O)))
+$(eval $(call gen_espidf_lib_rule,service,$(ESPADF_SERVICE_O)))
+$(eval $(call gen_espidf_lib_rule,stream,$(ESPADF_STREAM_O)))
 
 ################################################################################
 # List of object files from the ESP32 IDF components which are needed by ADF components

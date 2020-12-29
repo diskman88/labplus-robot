@@ -37,8 +37,8 @@ extern esp_audio_handle_t player;
 
 STATIC mp_obj_t dueros_init(mp_obj_t _i2c)
 {
-    if(!es_i2c_obj){
-        es_i2c_obj = (mp_obj_base_t *)_i2c;
+    if(!es8388_i2c_obj){
+        es8388_i2c_obj = (mp_obj_base_t *)_i2c;
     }
     duer_app_init();
     return mp_const_none;

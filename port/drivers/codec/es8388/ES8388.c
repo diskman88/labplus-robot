@@ -24,7 +24,7 @@
 
 #include <string.h>
 #include "esp_log.h"
-#include "es8388.h"
+#include "ES8388.h"
 
 #include "py/mperrno.h"
 #include "py/mphal.h"
@@ -78,7 +78,7 @@ int es_read_reg(uint8_t reg_addr, uint8_t *data)
     return ret;
 }
 
-void es8388_read_all()
+void ES8388_read_all()
 {
     for (int i = 0; i < 50; i++) {
         uint8_t reg = 0;
@@ -99,7 +99,7 @@ void es8388_read_all()
  *     - (-1) Parameter error
  *     - (0)   Success
  */
-static int es8388_set_adc_dac_volume(int mode, int volume, int dot)
+static int ES8388_set_adc_dac_volume(int mode, int volume, int dot)
 {
     int res = 0;
     if ( volume < -96 || volume > 0 ) {
@@ -133,7 +133,7 @@ static int es8388_set_adc_dac_volume(int mode, int volume, int dot)
  *     - (-1)  Error
  *     - (0)   Success
  */
-esp_err_t es8388_start(es_module_t mode)
+esp_err_t ES8388_start(es_module_t mode)
 {
     esp_err_t res = ESP_OK;
     uint8_t prev_data = 0, data = 0;
@@ -158,8 +158,8 @@ esp_err_t es8388_start(es_module_t mode)
     }
     if (mode == ES_MODULE_DAC || mode == ES_MODULE_ADC_DAC || mode == ES_MODULE_LINE) {
         res |= es_write_reg(ES8388_DACPOWER, 0x30);   //power up dac and line out
-        res |= es8388_set_voice_mute(false);
-        ESP_LOGD(ES_TAG, "es8388_start default is mode:%d", mode);
+        res |= ES8388_set_voice_mute(false);
+        ESP_LOGD(ES_TAG, "ES8388_start default is mode:%d", mode);
     }
 
     return res;
@@ -175,7 +175,7 @@ esp_err_t es8388_start(es_module_t mode)
  *     - (-1)  Error
  *     - (0)   Success
  */
-esp_err_t es8388_stop(es_module_t mode)
+esp_err_t ES8388_stop(es_module_t mode)
 {
     esp_err_t res = ESP_OK;
     if (mode == ES_MODULE_LINE) {
@@ -187,7 +187,7 @@ esp_err_t es8388_stop(es_module_t mode)
     }
     if (mode == ES_MODULE_DAC || mode == ES_MODULE_ADC_DAC) {
         res |= es_write_reg(ES8388_DACPOWER, 0x00);
-        res |= es8388_set_voice_mute(true); //res |= Es8388SetAdcDacVolume(ES_MODULE_DAC, -96, 5);      // 0db
+        res |= ES8388_set_voice_mute(true); //res |= Es8388SetAdcDacVolume(ES_MODULE_DAC, -96, 5);      // 0db
         // res |= es_write_reg(ES8388_DACPOWER, 0xC0);  //power down dac and line out
     }
     if (mode == ES_MODULE_ADC || mode == ES_MODULE_ADC_DAC) {
@@ -215,7 +215,7 @@ esp_err_t es8388_stop(es_module_t mode)
  *     - (-1)  Error
  *     - (0)   Success
  */
-esp_err_t es8388_i2s_config_clock(es_i2s_clock_t cfg)
+esp_err_t ES8388_i2s_config_clock(es_i2s_clock_t cfg)
 {
     esp_err_t res = ESP_OK;
     res |= es_write_reg(ES8388_MASTERMODE, cfg.sclk_div);
@@ -224,10 +224,10 @@ esp_err_t es8388_i2s_config_clock(es_i2s_clock_t cfg)
     return res;
 }
 
-esp_err_t es8388_deinit(void)
+esp_err_t ES8388_deinit(void)
 {
     int res = 0;
-    res = es_write_reg(ES8388_CHIPPOWER, 0xFF);  //reset and stop es8388
+    res = es_write_reg(ES8388_CHIPPOWER, 0xFF);  //reset and stop ES8388
     //     i2c_driver_delete(I2C_NUM_0);
     // #ifdef CONFIG_ESP_LYRAT_V4_3_BOARD
     //     headphone_detect_deinit();
@@ -241,10 +241,10 @@ esp_err_t es8388_deinit(void)
  *     - (-1)  Error
  *     - (0)   Success
  */
-esp_err_t es8388_init(audio_hal_codec_config_t cfg)
+esp_err_t ES8388_init(audio_hal_codec_config_t cfg)
 {
     int res = 0;
-    es8388_set_voice_mute(1);
+    ES8388_set_voice_mute(1);
     // res |= es_write_reg(ES8388_DACCONTROL3, 0x04);  // 0x04 mute/0x00 unmute&ramp;DAC unmute and  disabled digital volume control soft ramp
     /* Chip Control and Power Management */
     res |= es_write_reg(ES8388_CONTROL2, 0x40);  //?  0x50 !!!
@@ -261,7 +261,7 @@ esp_err_t es8388_init(audio_hal_codec_config_t cfg)
     res |= es_write_reg(ES8388_DACCONTROL20, 0x90); // only right DAC to right mixer enable 0db
     res |= es_write_reg(ES8388_DACCONTROL21, 0x80); //set internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
     res |= es_write_reg(ES8388_DACCONTROL23, 0x00);   //vroi=0
-    res |= es8388_set_adc_dac_volume(ES_MODULE_DAC, 0, 0);          // 0db
+    res |= ES8388_set_adc_dac_volume(ES_MODULE_DAC, 0, 0);          // 0db
 
     /* dac power on and select output in our application 0x30*/
     int tmp = 0;
@@ -290,12 +290,12 @@ esp_err_t es8388_init(audio_hal_codec_config_t cfg)
     res |= es_write_reg(ES8388_ADCCONTROL4, 0x0c); // Left/Right data, Left/Right justified mode, Bits length, I2S format
     res |= es_write_reg(ES8388_ADCCONTROL5, 0x02);  //ADCFsMode,singel SPEED,RATIO=256
     //ALC for Microphone
-    res |= es8388_set_adc_dac_volume(ES_MODULE_ADC, 0, 0);      // 0db
+    res |= ES8388_set_adc_dac_volume(ES_MODULE_ADC, 0, 0);      // 0db
     res |= es_write_reg(ES8388_ADCPOWER, 0x00); //Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
-    es8388_set_voice_volume(50);
-    es8388_set_voice_mute(0);
+    ES8388_set_voice_volume(50);
+    ES8388_set_voice_mute(0);
     // ESP_LOGE(ES_TAG, "init,out:%02x, in:%02x", cfg.dac_output, cfg.adc_input);
-    // es8388_read_all();
+    // ES8388_read_all();
     return res;
 }
 
@@ -309,7 +309,7 @@ esp_err_t es8388_init(audio_hal_codec_config_t cfg)
  *     - (-1) Error
  *     - (0)  Success
  */
-esp_err_t es8388_config_fmt(es_module_t mode, es_i2s_fmt_t fmt)
+esp_err_t ES8388_config_fmt(es_module_t mode, es_i2s_fmt_t fmt)
 {
     esp_err_t res = ESP_OK;
     uint8_t reg = 0;
@@ -333,7 +333,7 @@ esp_err_t es8388_config_fmt(es_module_t mode, es_i2s_fmt_t fmt)
  *     - (-1)  Error
  *     - (0)   Success
  */
-esp_err_t es8388_set_voice_volume(int volume)
+esp_err_t ES8388_set_voice_volume(int volume)
 {
     esp_err_t res = ESP_OK;
     if (volume < 0)
@@ -353,7 +353,7 @@ esp_err_t es8388_set_voice_volume(int volume)
  * @return
  *           volume
  */
-esp_err_t es8388_get_voice_volume(int *volume)
+esp_err_t ES8388_get_voice_volume(int *volume)
 {
     esp_err_t res = ESP_OK;
     uint8_t reg = 0;
@@ -379,7 +379,7 @@ esp_err_t es8388_get_voice_volume(int *volume)
  *     - (-1) Parameter error
  *     - (0)   Success
  */
-esp_err_t es8388_set_bits_per_sample(es_module_t mode, es_bits_length_t bits_length)
+esp_err_t ES8388_set_bits_per_sample(es_module_t mode, es_bits_length_t bits_length)
 {
     esp_err_t res = ESP_OK;
     uint8_t reg = 0;
@@ -407,7 +407,7 @@ esp_err_t es8388_set_bits_per_sample(es_module_t mode, es_bits_length_t bits_len
  *     - (-1) Parameter error
  *     - (0)   Success
  */
-esp_err_t es8388_set_voice_mute(bool enable)
+esp_err_t ES8388_set_voice_mute(bool enable)
 {
     esp_err_t res = ESP_OK;
     uint8_t reg = 0;
@@ -417,7 +417,7 @@ esp_err_t es8388_set_voice_mute(bool enable)
     return res;
 }
 
-esp_err_t es8388_get_voice_mute(void)
+esp_err_t ES8388_get_voice_mute(void)
 {
     esp_err_t res = ESP_OK;
     uint8_t reg = 0;
@@ -447,7 +447,7 @@ esp_err_t es8388_get_voice_mute(void)
  *     - (-1) Parameter error
  *     - (0)   Success
  */
-esp_err_t es8388_config_dac_power_and_output(int output)
+esp_err_t ES8388_config_dac_power_and_output(int output)
 {
     esp_err_t res;
     uint8_t reg = 0;
@@ -464,7 +464,7 @@ esp_err_t es8388_config_dac_power_and_output(int output)
  *     - (-1) Parameter error
  *     - (0)   Success
  */
-esp_err_t es8388_config_adc_input(es_adc_input_t input)
+esp_err_t ES8388_config_adc_input(es_adc_input_t input)
 {
     esp_err_t res;
     uint8_t reg = 0;
@@ -481,7 +481,7 @@ esp_err_t es8388_config_adc_input(es_adc_input_t input)
  *     - (-1) Parameter error
  *     - (0)   Success
  */
-esp_err_t es8388_set_mic_gain(es_mic_gain_t gain)
+esp_err_t ES8388_set_mic_gain(es_mic_gain_t gain)
 {
     esp_err_t res, gain_n;
     gain_n = (int)gain / 3;
