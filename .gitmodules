@@ -7,3 +7,6 @@
 [submodule "esp-idf"]
 	path = esp-idf
 	url = https://github.com/labplus-cn/esp-idf.git
+[submodule "port/boards/labplus-robot/audio/esp-adf"]
+	path = port/boards/labplus-robot/audio/esp-adf
+	url = https://github.com/espressif/esp-adf.git
