@@ -17,7 +17,6 @@
 1、项目创建
     * board下新建labplus-robot文件夹,复制board/mpython-classroom-kit文件到robot。
     * labplus-robot下创建audio文件夹，下面创建子模块esp-adf，项目需要使用esp-adf下的esp-idf。
-    * 对esp-adf/esp-idf打上补丁。
     * labplus-robot/modules下加入机器人相关的模块。 
     * 创建makefile-robot.mk文件，编译时，需执行：make -f Makefile-robot.mk release  make -f Makefile-robot.mk clean
     * 参见编译环境搭建，另行创建一个虚拟环境，robot用的是idf v3.3版本，需与4.0版本区分。
@@ -26,7 +25,7 @@
 2、项目修改
     * 修改Makefile-robot.mk：
         # 修改makefile-robot.mk下v3.3的commit hash值
-        # BOARD ?= robot
+        # BOARD ?= labplus-robot
         # FLASH_SIZE ?= 16MB
         # idf v3.3不需要LDFLAGS += -T esp32.rom.syscalls.ld
         # 去掉5x5 rgb点阵模块及驱动。
@@ -45,17 +44,28 @@
         1）modst7789.c放入builtin文件兲，修改makefile加入本文件的编译。
         2）加大应用分区表
         3）mpconfigboard.h加入模块st7789
+    * 驱动相关
+        去了除一些机器人上不需要的驱动
 
 项目创建完后，编译一下。
 
 3、移植esp-adf
     需解决的问题：
-        驱动相关，去了除一些不需要的驱动，micropython已对硬件I2C处理，wav_head.h/c改名为wave_head.h/c避免文件同名冲突
+        驱动相关
+            micropython已对硬件I2C处理,需修改es8388.h/c
+            port/drivers/codec/wav_head.h/c改名为wave_head.h/c避免文件同名冲突
+            port/drivers/codec/es8388/es8388.h/c改名为ES8388.h/c避免文件同名冲突
+            修改上述文件名后，对应模块的头文件引用需相应修改。
         配置需要的adf components,加入一需要的功能，如dueros、播放、录音、唤醒词。
         链接需要用到的adf库文件。
         配置好idf网络相关库。
         加入adf后，固件增大，需重新分配分区表
-    * 创建audio文件夹，放置本项目adf移植相关文件.
+
+    * 创建audio文件夹，放置esp-adf子模块及移植相关文件.
+    * 拉取esp-adf子模块到audio目录下
+    * 对esp-adf/idf_patches下所有补丁。
+    * 创建audio/driver,放置相关修改的板级驱动。
+    * 创建labplus-robot/partions.csv构建robot分区表文件
     * mpconfigboard.h加入adf相关模块
     * 修改mpconfigboard.mk,加入:
         SDKCONFIG += boards/sdkconfig.spiram
